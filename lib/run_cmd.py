@@ -31,7 +31,7 @@ class RunCMD:
         except:
             return False
 
-    def run_cmd(self,cmd:str) -> str:
+    def run_cmd(self,cmd:str) -> tuple:
         try:
             rp = Popen(cmd,shell=True,stdout=PIPE,stderr=PIPE)
             stdout,stderr = rp.communicate()
@@ -45,7 +45,7 @@ class RunCMD:
         except:
             return ('stderr', f"Error: Unable to run CMD: {cmd}")
 
-    def shell(self,cmd:str) -> str:
+    def shell(self,cmd:str) -> tuple:
 
         """
         Run a shell command on the local machine or remote through ssh
