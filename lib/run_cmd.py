@@ -104,6 +104,9 @@ class RunCMD:
 
     def add_figerprint(self,override_fp=False) -> bool:
 
+        if(not self.ssh_host):
+            return False
+        
         if(override_fp):
             self.delete_fingerprint()
         
