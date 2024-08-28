@@ -7,7 +7,7 @@ from lib.run_cmd import RunCMD
 cmd = RunCMD(ssh_host="192.168.111.132",ssh_user="root",ssh_key="~/.ssh/id_rsa",ssh_port=22)
 
 # add the host server fingerprint to the known_hosts file
-cmd.add_figerprint()
+cmd.add_figerprint(override_fp=False)
 
 # run command on the local machine
 returned_data = cmd.shell("ip -br addr")
