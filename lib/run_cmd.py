@@ -93,7 +93,7 @@ class RunCMD:
         try:
             self.check_fingerprint()
         except Exception as e:
-            print(e)
+            #print(e)
             with open(self.fingerprint_file,'r') as file:
                 lines = file.readlines()
             with open(self.fingerprint_file,'w') as file:
@@ -111,7 +111,7 @@ class RunCMD:
         try:
             fp_state = self.check_fingerprint()
         except Exception as e:
-            print(e)
+            #print(e)
             return False
 
         if(not fp_state):
