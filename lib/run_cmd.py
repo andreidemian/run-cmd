@@ -32,6 +32,10 @@ class RunCMD:
         self.fingerprint_file=os.path.expanduser(ssh_known_hosts)
 
     def is_host_up(self,timeout:int=2) -> bool:
+
+        if(not self.ssh_host):
+            return False
+
         try:
             socket.create_connection((self.ssh_host,self.ssh_port),timeout=timeout)
             return True
@@ -56,6 +60,8 @@ class RunCMD:
             return ('stderr', f"Error: Unable to run CMD: {cmd}")
 
     def get_server_fingerprint(self) -> list:
+        if(not self.ssh_host):
+            return None
         cmd = f"ssh-keyscan -p {self.ssh_port} {self.ssh_host} 2>/dev/null"
         data = self.run_cmd(cmd)
         fp_list = []
@@ -66,6 +72,9 @@ class RunCMD:
         return fp_list
 
     def get_local_fingerprint(self) -> list:
+
+        if(not self.ssh_host):
+            return None
 
         if(not os.path.isfile(self.fingerprint_file)):
             return None
@@ -78,6 +87,10 @@ class RunCMD:
         return fp_local_list
 
     def check_fingerprint(self) -> bool:
+
+        if(not self.ssh_host):
+            return False
+
         fp_server = self.get_server_fingerprint()
         fp_local = self.get_local_fingerprint()
 
@@ -89,6 +102,10 @@ class RunCMD:
         return False
     
     def delete_fingerprint(self) -> bool:
+
+        if(not self.ssh_host):
+            return False
+        
         try:
             self.check_fingerprint()
         except Exception as e:
