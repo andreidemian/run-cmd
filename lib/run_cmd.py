@@ -132,13 +132,12 @@ class RunCMD:
                 return ('stderr', f'SSH Key {self.ssh_key} not found')
 
             if(self.accept_host_key):
-                ssh_cmd = f'ssh -o StrictHostKeyChecking=no -i {self.ssh_key} -p {self.ssh_port} {self.ssh_user}@{self.ssh_host} {cmd}'
-                return self.run_cmd(ssh_cmd)
+                cmd = f'ssh -o StrictHostKeyChecking=no -i {self.ssh_key} -p {self.ssh_port} {self.ssh_user}@{self.ssh_host} {cmd}'
 
             try:
                 if(not self.check_fingerprint()):
                     return ('stderr', f'Theres no figerprint for {self.ssh_host} in known_hosts file')
-                ssh_cmd = f'ssh -i {self.ssh_key} -p {self.ssh_port} {self.ssh_user}@{self.ssh_host} {cmd}'
+                cmd = f'ssh -i {self.ssh_key} -p {self.ssh_port} {self.ssh_user}@{self.ssh_host} {cmd}'
             except Exception as e:
                 return ('stderr', e)
 
