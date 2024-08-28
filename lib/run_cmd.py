@@ -10,7 +10,13 @@ class RunCMD:
 
         through ssh example:
             cmd = RunCMD(ssh_host="my-srv.example.local",ssh_user="myuser",ssh_key="~/.ssh/id_rsa",ssh_port=22)
-        
+
+            # add the host server fingerprint to the known_hosts file but do not override if exists mismatch
+            cmd.add_figerprint(override_fp=False)
+
+            # override the host server fingerprint if exists and mismatch
+            cmd.add_figerprint(override_fp=True)
+
         local run cmd example:
             cmd = RunCMD()
 
