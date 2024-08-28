@@ -34,7 +34,7 @@ class RunCMD:
     def is_host_up(self,timeout:int=2) -> bool:
 
         if(not self.ssh_host):
-            return False
+            raise Exception("No ssh host defined")
 
         try:
             socket.create_connection((self.ssh_host,self.ssh_port),timeout=timeout)
@@ -60,8 +60,10 @@ class RunCMD:
             return ('stderr', f"Error: Unable to run CMD: {cmd}")
 
     def get_server_fingerprint(self) -> list:
+
         if(not self.ssh_host):
-            return None
+            raise Exception("No ssh host defined")
+        
         cmd = f"ssh-keyscan -p {self.ssh_port} {self.ssh_host} 2>/dev/null"
         data = self.run_cmd(cmd)
         fp_list = []
@@ -74,7 +76,7 @@ class RunCMD:
     def get_local_fingerprint(self) -> list:
 
         if(not self.ssh_host):
-            return None
+            raise Exception("No ssh host defined")
 
         if(not os.path.isfile(self.fingerprint_file)):
             return None
@@ -89,7 +91,7 @@ class RunCMD:
     def check_fingerprint(self) -> bool:
 
         if(not self.ssh_host):
-            return False
+            raise Exception("No ssh host defined")
 
         fp_server = self.get_server_fingerprint()
         fp_local = self.get_local_fingerprint()
@@ -104,7 +106,7 @@ class RunCMD:
     def delete_fingerprint(self) -> bool:
 
         if(not self.ssh_host):
-            return False
+            raise Exception("No ssh host defined")
         
         try:
             self.check_fingerprint()
@@ -122,7 +124,7 @@ class RunCMD:
     def add_figerprint(self,override_fp=False) -> bool:
 
         if(not self.ssh_host):
-            return False
+            raise Exception("No ssh host defined")
         
         if(override_fp):
             self.delete_fingerprint()
