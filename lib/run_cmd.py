@@ -22,15 +22,15 @@ class RunCMD:
         cmd.shell("ls -lh")
     """
 
-    def __init__(self,ssh_host:str=None,ssh_user:str=None,ssh_key:str="~/.ssh/id_rsa",ssh_port:str="22",ssh_known_hosts:str="~/.ssh/known_hosts",accept_host_key:bool=False,timeout:int=2):
+    def __init__(self,ssh_host:str=None,ssh_user:str=None,ssh_key:str="~/.ssh/id_rsa",ssh_port:str="22",ssh_known_hosts:str="~/.ssh/known_hosts",timeout:int=2):
         self.ssh_host=ssh_host
         self.ssh_user=ssh_user
         self.ssh_key=os.path.expanduser(ssh_key)
         self.ssh_port=ssh_port
-        self.accept_host_key=accept_host_key
         self.timeout=timeout
         self.fingerprint_file=os.path.expanduser(ssh_known_hosts)
 
+    # check if the host is up
     def is_host_up(self,timeout:int=2) -> bool:
 
         if(not self.ssh_host):
@@ -42,6 +42,7 @@ class RunCMD:
         except:
             return False
 
+    # run shell command
     def run_cmd(self,cmd:str,stdinput:str=None) -> tuple:
         try:
             if(stdinput):
@@ -59,6 +60,7 @@ class RunCMD:
         except:
             return ('stderr', f"Error: Unable to run CMD: {cmd}")
 
+    # get ssh server fingerprint
     def get_server_fingerprint(self) -> list:
 
         if(not self.ssh_host):
@@ -73,6 +75,7 @@ class RunCMD:
                     fp_list.append(line)
         return fp_list
 
+    # get local known_hosts file fingerprint
     def get_local_fingerprint(self) -> list:
 
         if(not self.ssh_host):
@@ -103,6 +106,7 @@ class RunCMD:
 
         return False
     
+    # delete fingerprint from known_hosts file
     def delete_fingerprint(self) -> bool:
 
         if(not self.ssh_host):
@@ -121,6 +125,7 @@ class RunCMD:
             return True
         return False
 
+    # add fingerprint to local known_hosts file
     def add_figerprint(self,override_fp=False) -> bool:
 
         if(not self.ssh_host):
@@ -142,6 +147,7 @@ class RunCMD:
                     file.write(line + "\n")
         return True
 
+    # run shell command on local machine or remote through ssh
     def shell(self,cmd:str) -> tuple:
         """
         Run a shell command on the local machine or remote through ssh
@@ -157,9 +163,6 @@ class RunCMD:
 
             if(not os.path.isfile(self.ssh_key)):
                 return ('stderr', f'SSH Key {self.ssh_key} not found')
-
-            if(self.accept_host_key):
-                cmd = f'ssh -o StrictHostKeyChecking=no -i {self.ssh_key} -p {self.ssh_port} {self.ssh_user}@{self.ssh_host} {cmd}'
 
             try:
                 if(not self.check_fingerprint()):
